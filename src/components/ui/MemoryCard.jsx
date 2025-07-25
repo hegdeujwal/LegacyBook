@@ -1,33 +1,62 @@
 "use client";
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Pencil, Trash2 } from "lucide-react";
+import AddMemoryModal from "./AddMemoryModal";
 
-export default function MemoryCard({ memory }) {
+export default function MemoryCard({ memory, index, onDelete, onEdit }) {
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleEdit = (updatedMemory) => {
+    onEdit(index, updatedMemory);
+    setIsEditing(false);
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.4 }}
-    >
-      <Card className="w-full max-w-sm shadow-lg dark:bg-muted bg-white rounded-2xl">
-        <CardContent className="p-5">
-          <div className="flex items-center gap-4 mb-4">
-            <Avatar>
-              <AvatarImage src={memory.image || "/default-avatar.png"} />
-            </Avatar>
-            <div>
-              <p className="font-semibold">{memory.name}</p>
-              <p className="text-sm text-gray-500">{memory.timestamp}</p>
-            </div>
-          </div>
-          <p className="text-lg font-bold mb-1">{memory.title}</p>
-          <p className="text-sm text-gray-700 dark:text-gray-300">
-            {memory.message}
+    <>
+      <Card className="relative">
+        <CardContent className="p-4 space-y-2">
+          {memory.image && (
+            <img
+              src={memory.image}
+              alt="Memory"
+              className="w-full h-40 object-cover rounded-md"
+            />
+          )}
+          <h3 className="text-lg font-semibold">{memory.title}</h3>
+          <p className="text-sm text-gray-600">{memory.message}</p>
+          <p className="text-xs text-right text-gray-400 italic">
+            — {memory.name}
           </p>
-          {memory.mood && <p className="mt-2 text-xl">{memory.mood}</p>}
+
+          <div className="flex justify-end gap-2 mt-4">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setIsEditing(true)}
+            >
+              <Pencil className="w-4 h-4 mr-1" /> Edit
+            </Button>
+            <Button
+              size="sm"
+              variant="destructive"
+              onClick={() => onDelete(index)}
+            >
+              <Trash2 className="w-4 h-4 mr-1" /> Delete
+            </Button>
+          </div>
         </CardContent>
       </Card>
-    </motion.div>
+
+      {isEditing && (
+        <AddMemoryModal
+          isEditing
+          initialMemory={memory}
+          onClose={() => setIsEditing(false)}
+          onAddMemory={handleEdit}
+        />
+      )}
+    </>
   );
 }

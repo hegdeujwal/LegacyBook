@@ -1,4 +1,3 @@
-// app/page.jsx
 "use client";
 import MemoryCard from "../components/ui/MemoryCard";
 import AddMemoryModal from "../components/ui/AddMemoryModal";
@@ -21,6 +20,17 @@ export default function Home() {
 
   const handleAdd = (memory) => setMemories([memory, ...memories]);
 
+  const handleDelete = (indexToDelete) => {
+    const updated = memories.filter((_, i) => i !== indexToDelete);
+    setMemories(updated);
+  };
+
+  const handleEdit = (indexToEdit, updatedMemory) => {
+    const updated = [...memories];
+    updated[indexToEdit] = updatedMemory;
+    setMemories(updated);
+  };
+
   const filtered = memories.filter(
     (m) =>
       m.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -40,7 +50,13 @@ export default function Home() {
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((memory, idx) => (
-            <MemoryCard key={idx} memory={memory} />
+            <MemoryCard
+              key={idx}
+              memory={memory}
+              index={idx}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+            />
           ))}
         </div>
       )}
