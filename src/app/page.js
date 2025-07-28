@@ -4,6 +4,7 @@ import AddMemoryModal from "../components/ui/AddMemoryModal";
 import SearchBar from "../components/ui/SearchBar";
 import MemoryCounter from "../components/ui/MemoryCounter";
 import { useState, useEffect } from "react";
+import ThemeToggle from "../components/ui/ThemeToggle";
 
 export default function Home() {
   const [memories, setMemories] = useState([]);
@@ -18,11 +19,11 @@ export default function Home() {
     localStorage.setItem("memories", JSON.stringify(memories));
   }, [memories]);
 
-const handleAdd = (memory) => {
-  const timestamp = new Date().toLocaleString(); // Human-readable format
-  const memoryWithTimestamp = { ...memory, timestamp };
-  setMemories([memoryWithTimestamp, ...memories]);
-};
+  const handleAdd = (memory) => {
+    const timestamp = new Date().toLocaleString(); // Human-readable format
+    const memoryWithTimestamp = { ...memory, timestamp };
+    setMemories([memoryWithTimestamp, ...memories]);
+  };
 
   const handleDelete = (indexToDelete) => {
     const updated = memories.filter((_, i) => i !== indexToDelete);
@@ -43,11 +44,15 @@ const handleAdd = (memory) => {
   );
 
   return (
-    <main className="p-6 max-w-5xl mx-auto">
+    <main className="p-6 max-w-5xl mx-auto bg-white text-black dark:bg-gray-900 dark:text-white min-h-screen transition-colors">
       <div className="flex justify-between items-center mb-4">
         <AddMemoryModal onAddMemory={handleAdd} />
-        <MemoryCounter count={filtered.length} />
+        <div>
+          <MemoryCounter count={filtered.length} />
+          <ThemeToggle />
+        </div>
       </div>
+
       <SearchBar onSearch={setSearch} />
       {filtered.length === 0 ? (
         <p className="text-center text-gray-500">No memories yet. Add one!</p>
