@@ -20,9 +20,19 @@ export default function MemoryCard({ memory, index, onDelete, onEdit }) {
     message: "",
     mood: "",
     image: "",
+    timestamp: "",
   });
 
-  // When edit mode is triggered, fill form with memory details
+  const [previewImage, setPreviewImage] = useState("");
+
+  // Add a timestamp if it's not already present
+  useEffect(() => {
+    if (!memory.timestamp) {
+      memory.timestamp = new Date().toLocaleString();
+    }
+  }, []);
+
+  // Populate form when edit opens
   useEffect(() => {
     if (isEditing && memory) {
       setForm({
@@ -31,15 +41,28 @@ export default function MemoryCard({ memory, index, onDelete, onEdit }) {
         message: memory.message || "",
         mood: memory.mood || "",
         image: memory.image || "",
+        timestamp: new Date().toLocaleString(), // Update timestamp on edit
       });
+      setPreviewImage(memory.image || "");
     }
   }, [isEditing]);
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const previewURL = URL.createObjectURL(file);
+      setPreviewImage(previewURL);
+      setForm({ ...form, image: previewURL });
+    }
+  };
+
   const handleEditSubmit = (e) => {
     e.preventDefault();
-    const updatedMemory = { ...form };
+    const updatedMemory = {
+      ...form,
+      timestamp: new Date().toLocaleString(), // Update timestamp
+    };
     onEdit(updatedMemory, index);
-    
     setIsEditing(false);
   };
 
@@ -58,6 +81,9 @@ export default function MemoryCard({ memory, index, onDelete, onEdit }) {
           <p className="text-sm text-gray-600">{memory.message}</p>
           <p className="text-xs text-right text-gray-400 italic">
             — {memory.name}
+          </p>
+          <p className="text-xs text-right text-gray-400">
+            ⏱ {memory.timestamp}
           </p>
 
           <div className="flex justify-end gap-2 mt-4">
@@ -119,11 +145,15 @@ export default function MemoryCard({ memory, index, onDelete, onEdit }) {
             </div>
 
             <div>
-              <label className="text-sm">Image URL</label>
-              <Input
-                value={form.image}
-                onChange={(e) => setForm({ ...form, image: e.target.value })}
-              />
+              <label className="text-sm">Image Upload</label>
+              <Input type="file" accept="image/*" onChange={handleFileChange} />
+              {previewImage && (
+                <img
+                  src={previewImage}
+                  alt="Preview"
+                  className="w-full h-32 mt-2 rounded-md object-cover"
+                />
+              )}
             </div>
 
             <div className="flex justify-end gap-2 mt-4">

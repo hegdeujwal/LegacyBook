@@ -18,7 +18,11 @@ export default function Home() {
     localStorage.setItem("memories", JSON.stringify(memories));
   }, [memories]);
 
-  const handleAdd = (memory) => setMemories([memory, ...memories]);
+const handleAdd = (memory) => {
+  const timestamp = new Date().toLocaleString(); // Human-readable format
+  const memoryWithTimestamp = { ...memory, timestamp };
+  setMemories([memoryWithTimestamp, ...memories]);
+};
 
   const handleDelete = (indexToDelete) => {
     const updated = memories.filter((_, i) => i !== indexToDelete);
