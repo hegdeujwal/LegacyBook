@@ -1,15 +1,45 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Pencil, Trash2 } from "lucide-react";
-import AddMemoryModal from "./AddMemoryModal";
 
 export default function MemoryCard({ memory, index, onDelete, onEdit }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [form, setForm] = useState({
+    name: "",
+    title: "",
+    message: "",
+    mood: "",
+    image: "",
+  });
 
-  const handleEdit = (updatedMemory) => {
-    onEdit(index, updatedMemory);
+  // When edit mode is triggered, fill form with memory details
+  useEffect(() => {
+    if (isEditing && memory) {
+      setForm({
+        name: memory.name || "",
+        title: memory.title || "",
+        message: memory.message || "",
+        mood: memory.mood || "",
+        image: memory.image || "",
+      });
+    }
+  }, [isEditing]);
+
+  const handleEditSubmit = (e) => {
+    e.preventDefault();
+    const updatedMemory = { ...form };
+    onEdit(updatedMemory, index);
+    
     setIsEditing(false);
   };
 
@@ -49,14 +79,66 @@ export default function MemoryCard({ memory, index, onDelete, onEdit }) {
         </CardContent>
       </Card>
 
-      {isEditing && (
-        <AddMemoryModal
-          isEditing
-          initialMemory={memory}
-          onClose={() => setIsEditing(false)}
-          onAddMemory={handleEdit}
-        />
-      )}
+      <Dialog open={isEditing} onOpenChange={setIsEditing}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Memory</DialogTitle>
+          </DialogHeader>
+
+          <form onSubmit={handleEditSubmit} className="space-y-3">
+            <div>
+              <label className="text-sm">Name</label>
+              <Input
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+              />
+            </div>
+
+            <div>
+              <label className="text-sm">Title</label>
+              <Input
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+              />
+            </div>
+
+            <div>
+              <label className="text-sm">Message</label>
+              <Textarea
+                value={form.message}
+                onChange={(e) => setForm({ ...form, message: e.target.value })}
+              />
+            </div>
+
+            <div>
+              <label className="text-sm">Mood</label>
+              <Input
+                value={form.mood}
+                onChange={(e) => setForm({ ...form, mood: e.target.value })}
+              />
+            </div>
+
+            <div>
+              <label className="text-sm">Image URL</label>
+              <Input
+                value={form.image}
+                onChange={(e) => setForm({ ...form, image: e.target.value })}
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 mt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsEditing(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit">Save Changes</Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

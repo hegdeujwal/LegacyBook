@@ -25,7 +25,7 @@ export default function Home() {
     setMemories(updated);
   };
 
-  const handleEdit = (indexToEdit, updatedMemory) => {
+  const handleEdit = (updatedMemory, indexToEdit) => {
     const updated = [...memories];
     updated[indexToEdit] = updatedMemory;
     setMemories(updated);
