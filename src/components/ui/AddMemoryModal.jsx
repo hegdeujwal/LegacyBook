@@ -41,14 +41,36 @@ export default function AddMemoryModal({
     }
   }, [editingMemory]);
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setForm((prev) => ({ ...prev, image: reader.result }));
+    reader.onloadend = async () => {
+      const base64Image = reader.result;
+
+      try {
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ image: base64Image }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          setForm((prev) => ({ ...prev, image: data.url }));
+          console.log("Uploaded to Cloudinary:", data.url);
+        } else {
+          console.error("Cloudinary upload failed:", data.message);
+        }
+      } catch (err) {
+        console.error("Image upload error:", err);
+      }
     };
+
     reader.readAsDataURL(file);
   };
 
