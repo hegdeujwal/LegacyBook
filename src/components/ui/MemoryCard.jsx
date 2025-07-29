@@ -69,42 +69,58 @@ export default function MemoryCard({ memory, index, onDelete, onEdit }) {
 
   return (
     <>
-      <Card className="relative">
-        <CardContent className="p-4 space-y-2">
-          {memory.image && (
-            <img
-              src={memory.image}
-              alt="Memory"
-              className="w-full h-40 object-cover rounded-md"
-            />
-          )}
-          <h3 className="text-lg font-semibold">{memory.title}</h3>
-          <p className="text-sm text-gray-600">{memory.message}</p>
-          <p className="text-xs text-right text-gray-400 italic">
-            — {memory.name}
-          </p>
-          <p className="text-xs text-right text-gray-400">
-            ⏱ {memory.timestamp}
-          </p>
+      <motion.div
+        initial={{ opacity: 0, y: 30, scale: 0.9 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{
+          type: "spring",
+          stiffness: 100,
+          damping: 15,
+          duration: 0.5,
+        }}
+        whileHover={{
+          scale: 1.03,
+          boxShadow: "0px 8px 24px rgba(0, 0, 0, 0.15)",
+          transition: { duration: 0.3 },
+        }}
+      >
+        <Card className="relative">
+          <CardContent className="p-4 space-y-2">
+            {memory.image && (
+              <img
+                src={memory.image}
+                alt="Memory"
+                className="w-full h-40 object-cover rounded-md"
+              />
+            )}
+            <h3 className="text-lg font-semibold">{memory.title}</h3>
+            <p className="text-sm text-gray-600">{memory.message}</p>
+            <p className="text-xs text-right text-gray-400 italic">
+              — {memory.name}
+            </p>
+            <p className="text-xs text-right text-gray-400">
+              ⏱ {memory.timestamp}
+            </p>
 
-          <div className="flex justify-end gap-2 mt-4">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setIsEditing(true)}
-            >
-              <Pencil className="w-4 h-4 mr-1" /> Edit
-            </Button>
-            <Button
-              size="sm"
-              variant="destructive"
-              onClick={() => onDelete(index)}
-            >
-              <Trash2 className="w-4 h-4 mr-1" /> Delete
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+            <div className="flex justify-end gap-2 mt-4">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setIsEditing(true)}
+              >
+                <Pencil className="w-4 h-4 mr-1" /> Edit
+              </Button>
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={() => onDelete(index)}
+              >
+                <Trash2 className="w-4 h-4 mr-1" /> Delete
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
 
       <Dialog open={isEditing} onOpenChange={setIsEditing}>
         <DialogContent className="sm:max-w-md">
