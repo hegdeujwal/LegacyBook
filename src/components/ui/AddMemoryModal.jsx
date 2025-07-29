@@ -25,7 +25,8 @@ export default function AddMemoryModal({
     mood: "",
     image: "",
   });
-
+  const [previewImage, setPreviewImage] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [open, setOpen] = useState(false);
 
   // Populate form when editing
@@ -45,9 +46,14 @@ export default function AddMemoryModal({
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setIsUploading(true);
+    setPreviewImage(null);
+    setForm((prev) => ({ ...prev, image: "" }));
+
     const reader = new FileReader();
     reader.onloadend = async () => {
       const base64Image = reader.result;
+      setPreviewImage(base64Image); // Instant preview
 
       try {
         const res = await fetch("/api/upload", {
@@ -68,6 +74,8 @@ export default function AddMemoryModal({
         }
       } catch (err) {
         console.error("Image upload error:", err);
+      } finally {
+        setIsUploading(false);
       }
     };
 
@@ -75,6 +83,10 @@ export default function AddMemoryModal({
   };
 
   const handleSubmit = () => {
+    if (isUploading) {
+      alert("Please wait for the image to finish uploading.");
+      return;
+    }
     const memory = {
       ...form,
       timestamp: new Date().toLocaleString(),
@@ -87,6 +99,7 @@ export default function AddMemoryModal({
     }
 
     setForm({ name: "", title: "", message: "", mood: "", image: "" });
+    setPreviewImage(null); // reset preview
     setOpen(false);
   };
 
@@ -141,17 +154,25 @@ export default function AddMemoryModal({
           <div>
             <Label>Image</Label>
             <Input type="file" accept="image/*" onChange={handleImageChange} />
-            {form.image && (
+            {(previewImage || form.image) && (
               <img
-                src={form.image}
+                src={previewImage || form.image}
                 alt="Preview"
                 className="mt-2 w-full max-h-[400px] object-contain rounded-md border"
               />
             )}
           </div>
 
-          <Button onClick={handleSubmit} className="w-full">
-            {editingMemory ? "Update Memory" : "Submit"}
+          <Button
+            onClick={handleSubmit}
+            className="w-full"
+            disabled={isUploading || !form.image}
+          >
+            {isUploading
+              ? "Uploading..."
+              : editingMemory
+              ? "Update Memory"
+              : "Submit"}
           </Button>
         </div>
       </DialogContent>
