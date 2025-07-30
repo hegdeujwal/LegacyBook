@@ -12,6 +12,16 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 
+// const moodEmojiMap = {
+//   Happy: "😊",
+//   Sad: "😢",
+//   Excited: "🤩",
+//   Nostalgic: "🕰️",
+//   Romantic: "❤️",
+//   Angry: "😡",
+//   Peaceful: "🕊️",
+//   Curious: "🤔",
+// };
 export default function AddMemoryModal({
   onAddMemory,
   onUpdateMemory,
@@ -142,11 +152,24 @@ export default function AddMemoryModal({
 
           {/* Mood */}
           <div>
-            <Label>Mood</Label>
-            <Input
+            <label className="text-sm">Mood</label>
+            <select
               value={form.mood}
               onChange={(e) => setForm({ ...form, mood: e.target.value })}
-            />
+              className="w-full rounded-md border px-3 py-2 text-sm text-black dark:text-white bg-white dark:bg-zinc-900"
+            >
+              <option value="">Select Mood</option>
+              <option value="Happy">😄 Happy</option>
+              <option value="Sad">😢 Sad</option>
+              <option value="Excited">🤩 Excited</option>
+              <option value="Angry">😠 Angry</option>
+              <option value="Nostalgic">🕰️ Nostalgic</option>
+              <option value="Grateful">🙏 Grateful</option>
+              <option value="Romantic">❤️ Romantic</option>
+              <option value="Funny">😂 Funny</option>
+              <option value="Anxious">😰 Anxious</option>
+              <option value="Surprised">😲 Surprised</option>
+            </select>
           </div>
 
           {/* Image Upload */}
@@ -166,7 +189,7 @@ export default function AddMemoryModal({
           <Button
             onClick={handleSubmit}
             className="w-full"
-            disabled={isUploading || !form.image}
+            disabled={isUploading}
           >
             {isUploading
               ? "Uploading..."

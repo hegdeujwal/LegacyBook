@@ -13,6 +13,22 @@ import {
 } from "@/components/ui/dialog";
 import { Pencil, Trash2 } from "lucide-react";
 
+// Mood to Emoji Map
+const moodEmojiMap = {
+  happy: "😊",
+  sad: "😢",
+  excited: "🤩",
+  nostalgic: "🥹",
+  grateful: "🙏",
+  romantic: "❤️",
+  funny: "😂",
+  relaxed: "😌",
+  surprised: "😲",
+  adventurous: "🏞️",
+  thoughtful: "🤔",
+  proud: "🎉",
+};
+
 export default function MemoryCard({ memory, index, onDelete, onEdit }) {
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState({
@@ -26,14 +42,12 @@ export default function MemoryCard({ memory, index, onDelete, onEdit }) {
 
   const [previewImage, setPreviewImage] = useState("");
 
-  // Add a timestamp if it's not already present
   useEffect(() => {
     if (!memory.timestamp) {
       memory.timestamp = new Date().toLocaleString();
     }
   }, []);
 
-  // Populate form when edit opens
   useEffect(() => {
     if (isEditing && memory) {
       setForm({
@@ -42,7 +56,7 @@ export default function MemoryCard({ memory, index, onDelete, onEdit }) {
         message: memory.message || "",
         mood: memory.mood || "",
         image: memory.image || "",
-        timestamp: new Date().toLocaleString(), // Update timestamp on edit
+        timestamp: new Date().toLocaleString(),
       });
       setPreviewImage(memory.image || "");
     }
@@ -61,11 +75,13 @@ export default function MemoryCard({ memory, index, onDelete, onEdit }) {
     e.preventDefault();
     const updatedMemory = {
       ...form,
-      timestamp: new Date().toLocaleString(), // Update timestamp
+      timestamp: new Date().toLocaleString(),
     };
     onEdit(updatedMemory, index);
     setIsEditing(false);
   };
+
+  const emoji = moodEmojiMap[memory.mood?.toLowerCase()] || "";
 
   return (
     <>
@@ -93,7 +109,9 @@ export default function MemoryCard({ memory, index, onDelete, onEdit }) {
                 className="w-full h-40 object-cover rounded-md"
               />
             )}
-            <h3 className="text-lg font-semibold">{memory.title}</h3>
+            <h3 className="text-lg font-semibold">
+              {emoji} {memory.title}
+            </h3>
             <p className="text-sm text-gray-600">{memory.message}</p>
             <p className="text-xs text-right text-gray-400 italic">
               — {memory.name}
@@ -155,10 +173,19 @@ export default function MemoryCard({ memory, index, onDelete, onEdit }) {
 
             <div>
               <label className="text-sm">Mood</label>
-              <Input
+              <select
+                className="w-full px-3 py-2 border rounded-md text-sm"
                 value={form.mood}
                 onChange={(e) => setForm({ ...form, mood: e.target.value })}
-              />
+              >
+                <option value="">Select a mood</option>
+                {Object.keys(moodEmojiMap).map((mood) => (
+                  <option key={mood} value={mood}>
+                    {moodEmojiMap[mood]}{" "}
+                    {mood.charAt(0).toUpperCase() + mood.slice(1)}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div>
