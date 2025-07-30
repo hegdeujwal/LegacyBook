@@ -11,22 +11,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-// const moodEmojiMap = {
-//   Happy: "😊",
-//   Sad: "😢",
-//   Excited: "🤩",
-//   Nostalgic: "🕰️",
-//   Romantic: "❤️",
-//   Angry: "😡",
-//   Peaceful: "🕊️",
-//   Curious: "🤔",
-// };
 export default function AddMemoryModal({
   onAddMemory,
   onUpdateMemory,
   editingMemory = null,
   triggerLabel = "Add Memory",
+  open,
+  setOpen,
 }) {
   const [form, setForm] = useState({
     name: "",
@@ -37,7 +30,6 @@ export default function AddMemoryModal({
   });
   const [previewImage, setPreviewImage] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [open, setOpen] = useState(false);
 
   // Populate form when editing
   useEffect(() => {
@@ -73,6 +65,29 @@ export default function AddMemoryModal({
           },
           body: JSON.stringify({ image: base64Image }),
         });
+        try {
+          const res = await fetch("/api/upload", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ image: base64Image }),
+          });
+
+          const data = await res.json();
+
+          if (res.ok) {
+            setForm((prev) => ({ ...prev, image: data.url }));
+            console.log("Uploaded to Cloudinary:", data.url);
+            toast.success("Image uploaded!");
+          } else {
+            console.error("Cloudinary upload failed:", data.message);
+            toast.error("Image upload failed.");
+          }
+        } catch (err) {
+          console.error("Image upload error:", err);
+          toast.error("Something went wrong while uploading.");
+        }
 
         const data = await res.json();
 
@@ -94,9 +109,10 @@ export default function AddMemoryModal({
 
   const handleSubmit = () => {
     if (isUploading) {
-      alert("Please wait for the image to finish uploading.");
+      toast.info("Please wait for the image to finish uploading.");
       return;
     }
+
     const memory = {
       ...form,
       timestamp: new Date().toLocaleString(),
@@ -104,12 +120,14 @@ export default function AddMemoryModal({
 
     if (editingMemory) {
       onUpdateMemory(editingMemory.timestamp, memory);
+      toast.success("Memory updated successfully!");
     } else {
       onAddMemory(memory);
+      toast.success("Memory added!");
     }
 
     setForm({ name: "", title: "", message: "", mood: "", image: "" });
-    setPreviewImage(null); // reset preview
+    setPreviewImage(null);
     setOpen(false);
   };
 

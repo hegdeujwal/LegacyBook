@@ -9,6 +9,8 @@ import ThemeToggle from "../components/ui/ThemeToggle";
 export default function Home() {
   const [memories, setMemories] = useState([]);
   const [search, setSearch] = useState("");
+  const [editingMemory, setEditingMemory] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("memories");
@@ -35,6 +37,10 @@ export default function Home() {
     updated[indexToEdit] = updatedMemory;
     setMemories(updated);
   };
+  const handleEditClick = (memory) => {
+    setEditingMemory(memory);
+    setModalOpen(true);
+  };
 
   const filtered = memories.filter(
     (m) =>
@@ -46,7 +52,20 @@ export default function Home() {
   return (
     <main className="p-6 max-w-5xl mx-auto bg-white text-black dark:bg-gray-900 dark:text-white min-h-screen transition-colors">
       <div className="flex justify-between items-center mb-4">
-        <AddMemoryModal onAddMemory={handleAdd} />
+        <AddMemoryModal
+          triggerLabel="Add Memory"
+          onAddMemory={handleAdd}
+          onUpdateMemory={(timestamp, updatedMemory) => {
+            const index = memories.findIndex((m) => m.timestamp === timestamp);
+            if (index !== -1) {
+              handleEdit(updatedMemory, index);
+            }
+          }}
+          editingMemory={editingMemory}
+          open={modalOpen}
+          setOpen={setModalOpen}
+        />
+
         <div>
           <MemoryCounter count={filtered.length} />
           <ThemeToggle />
@@ -64,7 +83,7 @@ export default function Home() {
               memory={memory}
               index={idx}
               onDelete={handleDelete}
-              onEdit={handleEdit}
+              onEdit={() => handleEditClick(memory)}
             />
           ))}
         </div>
