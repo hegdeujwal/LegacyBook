@@ -102,13 +102,12 @@ export default function MemoryCard({ memory, index, onDelete, onEdit }) {
       >
         <Card className="relative">
           <CardContent className="p-4 space-y-2">
-            {memory.image && (
-              <img
-                src={memory.image}
-                alt="Memory"
-                className="w-full h-40 object-cover rounded-md"
-              />
-            )}
+            <img
+              src={memory.image || "/default_img.png"}
+              alt={memory.title || "Default Memory Image"}
+              className="w-full h-48 object-cover rounded-md"
+            />
+
             <h3 className="text-lg font-semibold">
               {emoji} {memory.title}
             </h3>
