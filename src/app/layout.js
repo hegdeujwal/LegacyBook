@@ -27,7 +27,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="bg-white text-black dark:bg-gray-900 dark:text-white">
-        {children}
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 xl:px-20">
+          {children}
+        </div>
         <Toaster richColors closeButton position="top-center" theme={theme} />
       </body>
     </html>
