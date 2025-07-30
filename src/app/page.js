@@ -66,7 +66,7 @@ export default function Home() {
           setOpen={setModalOpen}
         />
 
-        <div clssName="flex flex-col items-center">
+        <div className="flex flex-col items-center">
           <MemoryCounter count={filtered.length} />
           <div className="mt-4 self-start ml-16">
             <ThemeToggle />

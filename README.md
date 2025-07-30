@@ -1,4 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Legacy Book - Memory Journal Application
+
+A Next.js application for creating and managing personal memories with images, moods, and timestamps.
+
+## Features
+
+- 📝 Create, edit, and delete memories
+- 🖼️ Upload and preview images (using Cloudinary)
+- 😊 Add mood emojis to memories
+- 🔍 Search through memories by name, title, or message
+- 🌓 Dark/Light theme toggle
+- 💾 Local storage persistence
+- 📱 Responsive grid layout
+
+## Tech Stack
+
+- [Next.js 15.4](https://nextjs.org/) - React framework
+- [TailwindCSS](https://tailwindcss.com/) - Styling
+- [Cloudinary](https://cloudinary.com/) - Image hosting
+- [Framer Motion](https://www.framer.com/motion/) - Animations
+- [Radix UI](https://www.radix-ui.com/) - UI Components
+- [Sonner](https://sonner.emilkowal.ski/) - Toast notifications
+
+## Prerequisites
+
+Before you begin, ensure you have:
+
+- Node.js 18+ installed
+- A Cloudinary account for image uploads
+
+## Environment Setup
+
+Create a `.env` file in the root directory:
+
+```bash
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+```
 
 ## Getting Started
 
