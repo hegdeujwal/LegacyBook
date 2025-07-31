@@ -123,10 +123,11 @@ export default function MemoryCard({ memory, index, onDelete, onEdit }) {
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => setIsEditing(true)}
+                onClick={() => onEdit(memory)} // instead of opening a local dialog
               >
                 <Pencil className="w-4 h-4 mr-1" /> Edit
               </Button>
+
               <Button
                 size="sm"
                 variant="destructive"

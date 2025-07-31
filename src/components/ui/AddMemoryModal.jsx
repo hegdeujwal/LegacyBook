@@ -44,20 +44,6 @@ export default function AddMemoryModal({
     }
   }, [editingMemory]);
 
-  // Reset form when dialog closes
-  useEffect(() => {
-    if (!open) {
-      setForm({
-        name: "",
-        title: "",
-        message: "",
-        mood: "",
-        image: "",
-      });
-      setPreviewImage(null);
-    }
-  }, [open]);
-
   const handleImageChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -79,20 +65,40 @@ export default function AddMemoryModal({
           },
           body: JSON.stringify({ image: base64Image }),
         });
+        try {
+          const res = await fetch("/api/upload", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ image: base64Image }),
+          });
+
+          const data = await res.json();
+
+          if (res.ok) {
+            setForm((prev) => ({ ...prev, image: data.url }));
+            console.log("Uploaded to Cloudinary:", data.url);
+            toast.success("Image uploaded!");
+          } else {
+            console.error("Cloudinary upload failed:", data.message);
+            toast.error("Image upload failed.");
+          }
+        } catch (err) {
+          console.error("Image upload error:", err);
+          toast.error("Something went wrong while uploading.");
+        }
 
         const data = await res.json();
 
         if (res.ok) {
           setForm((prev) => ({ ...prev, image: data.url }));
           console.log("Uploaded to Cloudinary:", data.url);
-          toast.success("Image uploaded!");
         } else {
           console.error("Cloudinary upload failed:", data.message);
-          toast.error("Image upload failed.");
         }
       } catch (err) {
         console.error("Image upload error:", err);
-        toast.error("Something went wrong while uploading.");
       } finally {
         setIsUploading(false);
       }
@@ -184,6 +190,7 @@ export default function AddMemoryModal({
             </select>
           </div>
 
+          {/* Image Upload */}
           {/* Image Upload */}
           <div>
             <Label>Image</Label>
