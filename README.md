@@ -76,8 +76,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## 📸 Screenshots
 
 ### 🧱 Memory Cards Overview
-![LegacyBook UI](https://github.com/user-attachments/assets/370b140a-aaf9-4897-af31-a2bb7bf9d655)
-![LegacyBook UI](https://github.com/user-attachments/assets/7bc6672c-d49b-40a6-949d-3236ef269d0e)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/370b140a-aaf9-4897-af31-a2bb7bf9d655" alt="LegacyBook UI 1" width="45%" style="margin-right: 10px;" />
+  <img src="https://github.com/user-attachments/assets/7bc6672c-d49b-40a6-949d-3236ef269d0e" alt="LegacyBook UI 2" width="45%" />
+</p>
+
 
 This screen shows the list of memories with mood emojis, images, titles, and messages. Supports light/dark theme, search, and persistent local storage.
 
