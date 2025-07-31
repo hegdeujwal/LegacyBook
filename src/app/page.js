@@ -25,6 +25,7 @@ export default function Home() {
     const timestamp = new Date().toLocaleString(); // Human-readable format
     const memoryWithTimestamp = { ...memory, timestamp };
     setMemories([memoryWithTimestamp, ...memories]);
+    setEditingMemory(null); // Reset editingMemory after adding
   };
 
   const handleDelete = (indexToDelete) => {
@@ -36,6 +37,8 @@ export default function Home() {
     const updated = [...memories];
     updated[indexToEdit] = updatedMemory;
     setMemories(updated);
+    setEditingMemory(null); // Reset editingMemory after editing
+    setModalOpen(false); // Close modal after editing
   };
   const handleEditClick = (memory) => {
     setEditingMemory(memory);
@@ -63,7 +66,10 @@ export default function Home() {
           }}
           editingMemory={editingMemory}
           open={modalOpen}
-          setOpen={setModalOpen}
+          setOpen={(open) => {
+            setModalOpen(open);
+            if (!open) setEditingMemory(null); // Reset editingMemory when modal closes
+          }}
         />
 
         <div className="flex flex-col items-center">
