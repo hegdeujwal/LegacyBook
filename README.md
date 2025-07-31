@@ -72,3 +72,15 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## 📸 Screenshots
+
+### 🧱 Memory Cards Overview
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/370b140a-aaf9-4897-af31-a2bb7bf9d655" alt="LegacyBook UI 1" width="45%" style="margin-right: 10px;" />
+  <img src="https://github.com/user-attachments/assets/7bc6672c-d49b-40a6-949d-3236ef269d0e" alt="LegacyBook UI 2" width="45%" />
+</p>
+
+
+This screen shows the list of memories with mood emojis, images, titles, and messages. Supports light/dark theme, search, and persistent local storage.
+
